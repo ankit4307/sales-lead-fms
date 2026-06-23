@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Share your feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:      #20243f;
+    --ink-soft: #5b5f78;
+    --paper:    #f3efe8;
+    --card:     #ffffff;
+    --line:     #e6e2d8;
+    --accent:   #ef7a45;
+    --accent-d: #d8602d;
+    --hero-1:   #232a4d;
+    --hero-2:   #3c2f5b;
+    --ok:       #1f9d6b;
+    --err:      #c0392b;
+    --radius:   18px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Hero band ---- */
+  .hero {
+    background: linear-gradient(150deg, var(--hero-1), var(--hero-2));
+    color: #fff;
+    padding: 38px 22px 70px;
+    text-align: center;
+  }
+  .hero .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin: 0 0 10px;
+  }
+  .hero h1 {
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: clamp(28px, 7vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 8px;
+  }
+  .hero p {
+    margin: 0 auto;
+    max-width: 30ch;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ---- Card ---- */
+  .wrap {
+    max-width: 540px;
+    margin: -46px auto 48px;
+    padding: 0 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 22px 28px;
+    box-shadow: 0 18px 44px -28px rgba(32,36,63,0.45);
+  }
+
+  .field { margin-bottom: 18px; }
+  .field:last-of-type { margin-bottom: 8px; }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+  label .req { color: var(--accent-d); font-weight: 600; }
+  label .hint { font-weight: 400; color: var(--ink-soft); font-size: 13px; }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: #fbfaf7;
+    border: 1.5px solid var(--line);
+    border-radius: 11px;
+    padding: 12px 13px;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  textarea { resize: vertical; min-height: 78px; }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(239,122,69,0.18);
+  }
+
+  .field.invalid input,
+  .field.invalid textarea { border-color: var(--err); }
+  .field.invalid .segmented { box-shadow: 0 0 0 1.5px var(--err); border-radius: 12px; }
+
+  .errline {
+    display: none;
+    color: var(--err);
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+  .field.invalid .errline { display: block; }
+
+  /* ---- Star rating (signature element) ---- */
+  .stars { display: flex; gap: 6px; }
+  .star {
+    width: 40px; height: 40px;
+    border: none; background: none; padding: 0;
+    cursor: pointer;
+    color: #d9d4c8;
+    transition: transform .12s, color .12s;
+  }
+  .star svg { width: 100%; height: 100%; display: block; }
+  .star:hover { transform: translateY(-2px); }
+  .star.on { color: var(--accent); }
+
+  /* ---- Segmented control ---- */
+  .segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    background: #f1eee7;
+    padding: 5px;
+    border-radius: 12px;
+  }
+  .seg {
+    border: none; background: none; font: inherit; font-weight: 500;
+    color: var(--ink-soft);
+    padding: 9px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .seg.on {
+    background: #fff; color: var(--ink);
+    box-shadow: 0 2px 6px -2px rgba(32,36,63,0.3);
+  }
+
+  /* ---- Submit ---- */
+  .submit {
+    width: 100%;
+    font: inherit; font-weight: 600; font-size: 16px;
+    color: #fff;
+    background: var(--accent);
+    border: none; border-radius: 12px;
+    padding: 14px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: background .15s, transform .05s;
+  }
+  .submit:hover { background: var(--accent-d); }
+  .submit:active { transform: scale(0.99); }
+  .submit:disabled { opacity: 0.65; cursor: progress; }
+
+  .formnote {
+    text-align: center; font-size: 12.5px; color: var(--ink-soft);
+    margin: 14px 0 0;
+  }
+
+  /* ---- Status / success ---- */
+  .banner {
+    display: none;
+    margin-bottom: 16px;
+    padding: 11px 13px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+  .banner.show { display: block; }
+  .banner.error { background: #fdecea; color: var(--err); border: 1px solid #f5c6c0; }
+
+  .done { text-align: center; padding: 14px 6px 6px; }
+  .done .check {
+    width: 64px; height: 64px; margin: 0 auto 16px;
+    border-radius: 50%;
+    background: rgba(31,157,107,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ok);
+  }
+  .done .check svg { width: 34px; height: 34px; }
+  .done h2 { font-family: "Fraunces", serif; font-weight: 600; margin: 0 0 8px; font-size: 24px; }
+  .done p { color: var(--ink-soft); margin: 0 0 20px; }
+  .again {
+    background: none; border: 1.5px solid var(--line); border-radius: 11px;
+    font: inherit; font-weight: 600; color: var(--ink);
+    padding: 11px 20px; cursor: pointer;
+  }
+  .again:hover { border-color: var(--accent); color: var(--accent-d); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <p class="eyebrow">We'd love to hear from you</p>
+    <h1>Share your feedback</h1>
+    <p>A minute of your time helps us do better next time.</p>
+  </header>
+
+  <main class="wrap">
+    <div class="card" id="card">
+
+      <div class="banner error" id="banner"></div>
+
+      <!-- ===== FORM VIEW ===== -->
+      <div id="formView">
+
+        <div class="field" data-name="name">
+          <label for="name">Name <span class="req">*</span></label>
+          <input type="text" id="name" autocomplete="name" />
+          <div class="errline">Please enter your name.</div>
+        </div>
+
+        <div class="field" data-name="contact">
+          <label for="contact">Contact No. <span class="req">*</span></label>
+          <input type="tel" id="contact" inputmode="tel" autocomplete="tel" />
+          <div class="errline">Please enter a contact number.</div>
+        </div>
+
+        <div class="field" data-name="email">
+          <label for="email">Email ID <span class="req">*</span></label>
+          <input type="email" id="email" inputmode="email" autocomplete="email" />
+          <div class="errline">Please enter a valid email address.</div>
+        </div>
+
+        <div class="field" data-name="city">
+          <label for="city">City <span class="req">*</span></label>
+          <input type="text" id="city" autocomplete="address-level2" />
+          <div class="errline">Please enter your city.</div>
+        </div>
+
+        <div class="field" data-name="liked">
+          <label for="liked">What did you enjoy most? <span class="hint">(optional)</span></label>
+          <textarea id="liked"></textarea>
+        </div>
+
+        <div class="field" data-name="improve">
+          <label for="improve">What could we do better? <span class="hint">(optional)</span></label>
+          <textarea id="improve"></textarea>
+        </div>
+
+        <div class="field" data-name="rating">
+          <label>How would you rate the experience? <span class="hint">(optional)</span></label>
+          <div class="stars" id="stars" role="radiogroup" aria-label="Rating out of 5"></div>
+          <input type="hidden" id="rating" value="" />
+        </div>
+
+        <div class="field" data-name="oneOnOne">
+          <label>Would you like a one-on-one meeting? <span class="req">*</span></label>
+          <div class="segmented" id="oneOnOne" role="radiogroup" aria-label="One-on-one meeting">
+            <button type="button" class="seg" data-val="Yes">Yes, please</button>
+            <button type="button" class="seg" data-val="Maybe">Maybe later</button>
+            <button type="button" class="seg" data-val="No">No, thanks</button>
+          </div>
+          <input type="hidden" id="oneOnOneVal" value="" />
+          <div class="errline">Please pick one option.</div>
+        </div>
+
+        <div class="field" data-name="reference">
+          <label for="reference">Know someone who'd benefit? <span class="hint">(name &amp; number, optional)</span></label>
+          <textarea id="reference" placeholder="e.g. Riya Sharma — 98xxxxxx10"></textarea>
+        </div>
+
+        <button type="button" class="submit" id="submitBtn">Send feedback</button>
+        <p class="formnote">Your details are saved securely and never shared.</p>
+      </div>
+
+      <!-- ===== SUCCESS VIEW ===== -->
+      <div class="done" id="doneView" style="display:none;">
+        <div class="check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h2>Thank you!</h2>
+        <p>Your feedback has been received. We appreciate you taking the time.</p>
+        <button type="button" class="again" id="againBtn">Submit another response</button>
+      </div>
+
+    </div>
+  </main>
+
+<script>
+  // ============================================================
+  // CONFIG — paste your deployed Apps Script Web App URL here.
+  // It must end in /exec  (NOT /dev). See README for steps.
+  // ============================================================
+  const SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
+  // ---- Star rating widget ----
+  const starsWrap = document.getElementById('stars');
+  const ratingInput = document.getElementById('rating');
+  const STAR_PATH = 'M12 2.5l2.95 5.98 6.6.96-4.78 4.66 1.13 6.57L12 18.56l-5.9 3.1 1.13-6.57L2.45 9.44l6.6-.96L12 2.5z';
+  let rating = 0;
+
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'star';
+    b.setAttribute('role', 'radio');
+    b.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : ''));
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="' + STAR_PATH + '"/></svg>';
+    b.addEventListener('click', () => setRating(i));
+    starsWrap.appendChild(b);
+  }
+  function setRating(n) {
+    rating = n;
+    ratingInput.value = String(n);
+    [...starsWrap.children].forEach((s, idx) => s.classList.toggle('on', idx < n));
+  }
+
+  // ---- One-on-one segmented control ----
+  const segWrap = document.getElementById('oneOnOne');
+  const oneOnOneVal = document.getElementById('oneOnOneVal');
+  segWrap.querySelectorAll('.seg').forEach(btn => {
+    btn.setAttribute('role', 'radio');
+    btn.addEventListener('click', () => {
+      segWrap.querySelectorAll('.seg').forEach(s => s.classList.remove('on'));
+      btn.classList.add('on');
+      oneOnOneVal.value = btn.dataset.val;
+      clearError('oneOnOne');
+    });
+  });
+
+  // ---- Validation helpers ----
+  function fieldEl(name) { return document.querySelector('.field[data-name="' + name + '"]'); }
+  function setError(name) { fieldEl(name).classList.add('invalid'); }
+  function clearError(name) { fieldEl(name).classList.remove('invalid'); }
+
+  ['name', 'contact', 'email', 'city'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => clearError(id));
+  });
+
+  function validate(data) {
+    let ok = true;
+    const need = ['name', 'contact', 'email', 'city'];
+    need.forEach(k => {
+      if (!data[k]) { setError(k); ok = false; } else { clearError(k); }
+    });
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      setError('email'); ok = false;
+    }
+    if (!data.oneOnOne) { setError('oneOnOne'); ok = false; } else { clearError('oneOnOne'); }
+    return ok;
+  }
+
+  // ---- Banner ----
+  const banner = document.getElementById('banner');
+  function showError(msg) {
+    banner.textContent = msg;
+    banner.classList.add('show');
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function hideError() { banner.classList.remove('show'); }
+
+  // ---- Submit ----
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.addEventListener('click', submitForm);
+
+  async function submitForm() {
+    hideError();
+    const data = {
+      name:      document.getElementById('name').value.trim(),
+      contact:   document.getElementById('contact').value.trim(),
+      email:     document.getElementById('email').value.trim(),
+      city:      document.getElementById('city').value.trim(),
+      liked:     document.getElementById('liked').value.trim(),
+      improve:   document.getElementById('improve').value.trim(),
+      rating:    ratingInput.value,
+      oneOnOne:  oneOnOneVal.value,
+      reference: document.getElementById('reference').value.trim()
+    };
+
+    if (!validate(data)) {
+      showError('Please complete the highlighted fields.');
+      return;
+    }
+
+    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+      showError('Form not connected yet — set SCRIPT_URL in index.html.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    try {
+      // Apps Script /exec returns no CORS headers, so we post with
+      // mode: 'no-cors'. The row still saves; we just can't read the
+      // JSON reply, hence the client-side validation above.
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+      showDone();
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send feedback';
+      showError('Could not send right now. Please check your connection and try again.');
+    }
+  }
+
+  // ---- Success view ----
+  const formView = document.getElementById('formView');
+  const doneView = document.getElementById('doneView');
+  function showDone() {
+    formView.style.display = 'none';
+    doneView.style.display = 'block';
+    document.getElementById('card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  document.getElementById('againBtn').addEventListener('click', () => {
+    formView.querySelectorAll('input, textarea').forEach(el => { el.value = ''; });
+    setRating(0);
+    segWrap.querySelectorAll('.seg').forEach(s => s.classList.remove('on'));
+    oneOnOneVal.value = '';
+    formView.querySelectorAll('.field').forEach(f => f.classList.remove('invalid'));
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send feedback';
+    hideError();
+    doneView.style.display = 'none';
+    formView.style.display = 'block';
+  });
+</script>
+</body>
+</html>
